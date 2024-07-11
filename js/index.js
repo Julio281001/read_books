@@ -1,6 +1,5 @@
-const books_list = document.querySelector("#read_books");
-
 document.addEventListener("DOMContentLoaded", async function () {
+    const books_list = document.querySelector("#read_books");
     try {
         const response = await fetch("http://localhost:8000/books");
         if (!response.ok) {
