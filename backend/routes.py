@@ -17,7 +17,7 @@ def get_db():
         
 
 @router.get("/books", response_model=List[Book])
-def read_books(skip: int = 0, limit: Optional[int] = None, db: Session = Depends(get_db)):
+async def read_books(skip: int = 0, limit: Optional[int] = None, db: Session = Depends(get_db)):
     query = db.query(BookModel).offset(skip)
     if limit:
         query = query.limit(limit)
@@ -26,7 +26,7 @@ def read_books(skip: int = 0, limit: Optional[int] = None, db: Session = Depends
 
 
 @router.get("/books/{book_id}", response_model=Book)
-def read_book(book_id: int, db: Session = Depends(get_db)):
+async def read_book(book_id: int, db: Session = Depends(get_db)):
     db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
     if db_book is None:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -34,7 +34,7 @@ def read_book(book_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/books/", response_model=Book)
-def create_book(book: BookCreate, db: Session = Depends(get_db)):
+async def create_book(book: BookCreate, db: Session = Depends(get_db)):
     db_book = BookModel(title=book.title, author=book.author, rating=book.rating)
     db.add(db_book)
     db.commit()
@@ -43,7 +43,7 @@ def create_book(book: BookCreate, db: Session = Depends(get_db)):
 
 
 @router.put("/books/{book_id}", response_model=Book)
-def update_book(book_id: int, book: BookCreate, db: Session = Depends(get_db)):
+async def update_book(book_id: int, book: BookCreate, db: Session = Depends(get_db)):
     db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
     if db_book is None:
         raise HTTPException(status_code=404, detail="Book not found")
@@ -56,7 +56,7 @@ def update_book(book_id: int, book: BookCreate, db: Session = Depends(get_db)):
 
 
 @router.delete("/books/{book_id}", response_model=Book)
-def delete_book(book_id: int, db: Session = Depends(get_db)):
+async def delete_book(book_id: int, db: Session = Depends(get_db)):
     db_book = db.query(BookModel).filter(BookModel.id == book_id).first()
     if db_book is None:
         raise HTTPException(status_code=404, detail="Book not found")
