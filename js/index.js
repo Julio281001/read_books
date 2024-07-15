@@ -7,12 +7,22 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
         const books = await response.json();
         books.forEach((book) => {
-            const output = book.title + " - " + book.author + " - " + book.rating + "/10";
             const li = document.createElement("li");
+
+            const output = book.title + " - " + book.author + " - " + book.rating + "/10";
             const p = document.createElement("p");
+            p.style.display = "inline";
             const pContent = document.createTextNode(output);
             p.appendChild(pContent);
             li.appendChild(p);
+
+            li.appendChild(document.createTextNode(" - "));
+
+            const editLink = document.createElement("a");
+            editLink.href = `edit_book.html?id=${book.id}`;
+            editLink.textContent = "Edit";
+            li.appendChild(editLink);
+
             books_list.appendChild(li);
         });
     } catch (error) {
